@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MyStop</string>
+    <string name="welcome">Tervetuloa</string>
+    <string name="no_selected_stop">Ei valittua pysäkkiä</string>
+    <string name="select_stop">Valitse pysäkki</string>
+    <string name="select">Valitse</string>
 </resources>
