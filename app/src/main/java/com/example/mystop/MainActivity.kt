@@ -13,10 +13,18 @@ import java.util.jar.Manifest
 class MainActivity : AppCompatActivity() {
     private var PERMISSION_FINE_LOCATION = 1
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private val fragmentTimetable = TimetableListFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //add fragment
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .add(R.id.fragment_container, fragmentTimetable, "timetable")
+                .commit()
+        }
 
         //ask for location permission
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
