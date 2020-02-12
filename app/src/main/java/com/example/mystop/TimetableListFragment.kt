@@ -2,7 +2,6 @@ package com.example.mystop
 
 import android.content.Context
 import android.os.Bundle
-import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +26,7 @@ class TimetableListFragment: Fragment() {
     internal inner class MyCustomAdapter(context: Context):BaseAdapter() {
         private val mContext: Context = context
 
-        val dummyList = listOf("Dog", "Cat", "Bird")
+        private val dummyList = listOf("Dog", "Cat", "Bird")
 
         //number of list rows
         override fun getCount(): Int {
