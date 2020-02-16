@@ -9,17 +9,26 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.util.Log
+import android.widget.Button
 import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import io.reactivex.Observable
+import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
+//https://www.raywenderlich.com/2071847-reactive-programming-with-rxandroid-in-kotlin-an-introduction
+//TODO make observables disposable
 
 class MainActivity : AppCompatActivity() {
     private var PERMISSION_FINE_LOCATION = 1
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val fragmentTimetable = TimetableListFragment()
+    private lateinit var locationButton: Button
+    private var counter = 0
 
     //create handler
     private val mHandler: Handler = object :
@@ -35,7 +44,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        locationButton = findViewById(R.id.button)
 
         //add fragment
         if (savedInstanceState == null) {
@@ -56,6 +65,21 @@ class MainActivity : AppCompatActivity() {
             //permission is granted
             doMainActivity()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        val locationButtonObservable = createButtonClickObservable()
+        locationButtonObservable
+            .subscribeOn(AndroidSchedulers.mainThread())
+            //.observeOn(Schedulers.io())
+            //.map { locationButton.text = "${it} ${counter} times" }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe{
+                counter += 1
+                locationButton.text = "${it} ${counter} times"
+            }
     }
 
     private fun doMainActivity() {
@@ -82,9 +106,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-
-
     private fun getLocation() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         fusedLocationClient.lastLocation.addOnCompleteListener(this) {
@@ -107,6 +128,17 @@ class MainActivity : AppCompatActivity() {
         val connectivityManager = this.getSystemService(Context.CONNECTIVITY_SERVICE)
             as ConnectivityManager
         return connectivityManager.activeNetworkInfo?.isConnected?:false
+    }
+
+    private fun createButtonClickObservable(): Observable<String> {
+        return  Observable.create {emitter ->
+            locationButton.setOnClickListener {
+                emitter.onNext("Button was clicked")
+            }
+            emitter.setCancellable {
+                locationButton.setOnClickListener(null)
+            }
+        }
     }
 }
 
