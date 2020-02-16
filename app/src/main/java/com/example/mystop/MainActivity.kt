@@ -14,9 +14,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import java.util.jar.Manifest
 
-//TODO group active functions into one function
 
 class MainActivity : AppCompatActivity() {
     private var PERMISSION_FINE_LOCATION = 1
@@ -55,10 +53,14 @@ class MainActivity : AppCompatActivity() {
                                                 PERMISSION_FINE_LOCATION)
         } else {
             Log.d("TAG", "onCreate else")
-            getLocation()
-            openConnection()
             //permission is granted
+            doMainActivity()
         }
+    }
+
+    private fun doMainActivity() {
+        getLocation()
+        openConnection()
     }
 
     override fun onRequestPermissionsResult(
@@ -71,8 +73,7 @@ class MainActivity : AppCompatActivity() {
                 //if request is cancelled, the result array is empty
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     //permission was granted, do things with
-                    getLocation()
-                    openConnection()
+                    doMainActivity()
                 }
                 else {
                     //permission denied
@@ -80,6 +81,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
+
 
     private fun getLocation() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
