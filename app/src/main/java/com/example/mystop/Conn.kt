@@ -2,18 +2,48 @@ package com.example.mystop
 
 import android.os.Handler
 import android.util.Log
-import java.io.InputStream
-import java.lang.Exception
-import java.lang.StringBuilder
-import java.net.HttpURLConnection
+import okhttp3.*
+import okhttp3.RequestBody.create
 import java.net.URL
+
 
 class Conn(mHand: Handler): Runnable {
 
     private val myHandler = mHand
-    //private val myURL = URL("https://api.digitransit.fi/routing/v1/routers/hsl/index/graphql")
-    private val myURL = URL("https://worldtimeapi.org/api/timezone/Europe/Helsinki.txt")
+    private val myURL = URL("https://api.digitransit.fi/routing/v1/routers/hsl/index/graphql")
+    private val graphql = """{
+  stop(id: "HSL:1173434") {
+    name
+    lat
+    lon
+  }
+}"""
 
+    override fun run() {
+        val client = OkHttpClient().newBuilder()
+            .build()
+        val mediaType = MediaType.parse("application/graphql")
+        val body: RequestBody = create(
+            mediaType, graphql
+        )
+        val request: Request = Request.Builder()
+            .url(myURL)
+            .method("POST", body)
+            .addHeader("Content-Type", "application/graphql")
+            .build()
+        val response: Response = client.newCall(request).execute()
+
+        Log.d("TAG", response.body()?.string())
+        Log.d("TAG", response.toString())
+        try {
+
+        } catch (e: Exception) {
+            Log.d("TAG", "Exception: ${e.message}")
+        }
+    }
+
+
+    /*
     override fun run() {
         try {
             val myConn = myURL.openConnection() as HttpURLConnection
@@ -32,4 +62,6 @@ class Conn(mHand: Handler): Runnable {
             Log.d("TAG", "Exception: ${e.message}")
         }
     }
+
+     */
 }

@@ -16,12 +16,11 @@ import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import io.reactivex.Observable
-import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 
 //https://www.raywenderlich.com/2071847-reactive-programming-with-rxandroid-in-kotlin-an-introduction
 //TODO make observables disposable
+//TODO parse server response
 
 class MainActivity : AppCompatActivity() {
     private var PERMISSION_FINE_LOCATION = 1
@@ -85,6 +84,7 @@ class MainActivity : AppCompatActivity() {
     private fun doMainActivity() {
         getLocation()
         openConnection()
+        //volley()
     }
 
     override fun onRequestPermissionsResult(
