@@ -86,13 +86,6 @@ class MainActivity : AppCompatActivity() {
                 counter += 1
                 locationButton.text = "${it} ${counter} times"
             }
-        //Map settings
-        val map = findViewById<MapView>(R.id.map)
-        map.setTileSource(TileSourceFactory.MAPNIK)
-        map.setMultiTouchControls(true)
-        map.controller.setZoom(9.0)
-        val point = GeoPoint(60.16,24.93)
-        map.controller.setCenter(point)
     }
 
     //group functions into one

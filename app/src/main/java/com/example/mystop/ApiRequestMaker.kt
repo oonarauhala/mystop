@@ -4,7 +4,7 @@ import okhttp3.*
 import java.lang.StringBuilder
 import java.net.URL
 
-class RequestMaker() {
+class ApiRequestMaker {
 
     private var contentType = "application/graphql"
 

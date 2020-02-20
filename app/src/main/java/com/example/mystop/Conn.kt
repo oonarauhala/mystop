@@ -15,10 +15,21 @@ class Conn(mHand: Handler): Runnable {
         try {
             //make request to server
             if (query != "") {
-                val requestResponseString = RequestMaker().makeRequest(myURL, query)
+                val requestResponse = ApiRequestMaker().makeRequest(myURL, query)
+                Log.d("TAG", requestResponse)
+
+                //parsing
+                try {
+                    val requestResponseObject = ApiResponseParser.parse(requestResponse)
+                    Log.d("TAG", "Object test (name: "+requestResponseObject.name)
+                    Log.d("TAG", "Object test (zone: "+requestResponseObject.zoneId)
+                } catch(e:Exception) {
+                    Log.d("TAG", "Parsing error")
+                }
+
                 val message = myHandler.obtainMessage()
                 message.what = 0
-                message.obj = requestResponseString
+                message.obj = requestResponse
                 myHandler.sendMessage(message)
             }
             else {
@@ -30,6 +41,14 @@ class Conn(mHand: Handler): Runnable {
     }
 
     fun createQueryWithNumber(number: Int){
-        query = """{stops(name: "$number") {name lat lon}}"""
+        query = """{stops(name: "$number") {gtfsId name lat lon zoneId wheelchairBoarding}}"""
+    }
+
+    fun createQueryWithName(name: String){
+        query = """{stops(name: "$name") {gtfsId name lat lon zoneId wheelchairBoarding}}"""
+    }
+
+    fun createQueryWithLocation(lat: Float, lon: Float, radius: Int){
+        //TODO location query
     }
 }
