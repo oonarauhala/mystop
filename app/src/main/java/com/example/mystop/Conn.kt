@@ -4,6 +4,7 @@ import android.os.Handler
 import android.util.Log
 import okhttp3.*
 import okhttp3.RequestBody.create
+import java.lang.StringBuilder
 import java.net.URL
 
 
@@ -12,12 +13,12 @@ class Conn(mHand: Handler): Runnable {
     private val myHandler = mHand
     private val myURL = URL("https://api.digitransit.fi/routing/v1/routers/hsl/index/graphql")
     private val graphql = """{
-  stop(id: "HSL:1173434") {
-    name
-    lat
-    lon
-  }
-}"""
+                                stop(id: "HSL:1173434") {
+                                    name
+                                    lat
+                                    lon
+                                }
+                            }"""
 
     override fun run() {
         val client = OkHttpClient().newBuilder()
@@ -32,9 +33,17 @@ class Conn(mHand: Handler): Runnable {
             .addHeader("Content-Type", "application/graphql")
             .build()
         val response: Response = client.newCall(request).execute()
+        val result = StringBuilder()
+        result.append(response.body()?.string())
+        val str = result.toString()
+        val msg = myHandler.obtainMessage()
+        msg.what = 0
+        msg.obj = str
+        myHandler.sendMessage(msg)
 
-        Log.d("TAG", response.body()?.string())
-        Log.d("TAG", response.toString())
+
+        Log.d("TAG", "Response body: "+str)
+        //Log.d("TAG", response.toString())
         try {
 
         } catch (e: Exception) {

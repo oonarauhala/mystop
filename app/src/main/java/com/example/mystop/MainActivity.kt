@@ -21,11 +21,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 //https://www.raywenderlich.com/2071847-reactive-programming-with-rxandroid-in-kotlin-an-introduction
 //TODO make observables disposable
 //TODO parse server response
+//TODO change listview to recyclerview
 
 class MainActivity : AppCompatActivity() {
     private var PERMISSION_FINE_LOCATION = 1
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val fragmentTimetable = TimetableListFragment()
+    private val fragmentMap = MapFragment()
     private lateinit var locationButton: Button
     private var counter = 0
 
@@ -45,12 +47,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         locationButton = findViewById(R.id.button)
 
-        //add fragment
+        //add fragments
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .add(R.id.fragment_container, fragmentTimetable, "timetable")
+                .add(R.id.fragment_container, fragmentMap, "map")
                 .commit()
         }
+
 
         //ask for location permission
         // TODO ask permissions for network
@@ -81,10 +85,10 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
+    //group functions into one
     private fun doMainActivity() {
         getLocation()
         openConnection()
-        //volley()
     }
 
     override fun onRequestPermissionsResult(
