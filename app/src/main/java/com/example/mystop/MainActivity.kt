@@ -17,6 +17,10 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import kotlinx.android.synthetic.main.fragment_map.*
+import org.osmdroid.views.MapView
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.GeoPoint
 
 //https://www.raywenderlich.com/2071847-reactive-programming-with-rxandroid-in-kotlin-an-introduction
 //TODO make observables disposable
@@ -41,7 +45,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -54,7 +57,6 @@ class MainActivity : AppCompatActivity() {
                 .add(R.id.fragment_container, fragmentMap, "map")
                 .commit()
         }
-
 
         //ask for location permission
         // TODO ask permissions for network
@@ -83,6 +85,13 @@ class MainActivity : AppCompatActivity() {
                 counter += 1
                 locationButton.text = "${it} ${counter} times"
             }
+        //Map settings
+        val map = findViewById<MapView>(R.id.map)
+        map.setTileSource(TileSourceFactory.MAPNIK)
+        map.setMultiTouchControls(true)
+        map.controller.setZoom(9.0)
+        val point = GeoPoint(60.16,24.93)
+        map.controller.setCenter(point)
     }
 
     //group functions into one
