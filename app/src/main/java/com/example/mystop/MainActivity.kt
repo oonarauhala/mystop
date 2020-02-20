@@ -26,6 +26,7 @@ import org.osmdroid.util.GeoPoint
 //TODO make observables disposable
 //TODO parse server response
 //TODO change listview to recyclerview
+//TODO make new thread for map operations as its skipping frames atm
 
 class MainActivity : AppCompatActivity() {
     private var PERMISSION_FINE_LOCATION = 1
@@ -129,10 +130,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //make api request and set query parameters
     private fun openConnection() {
         if (isNetworkAvailable()) {
-            val myRunnable = Conn(mHandler)
-            val myThread = Thread(myRunnable)
+            val connection = Conn(mHandler)
+            connection.createQueryWithNumber(2518)
+            val myThread = Thread(connection)
             myThread.start()
         }
     }
